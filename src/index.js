@@ -7,6 +7,7 @@ const { connectDb, checkDBConnection, disConnectDB } = require('./models/db');
 const apiResponse = require('./utils/apiResponse');
 const responseMessages = require('./constants/messages');
 const mainRouter = require('./routes/index.route');
+const loggerMiddleware = require('./middlewares/logger.middleware');
 dotenv.config();
 
 global.lang = 'en';
@@ -20,16 +21,18 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-morgan.token('body', (req) => JSON.stringify(req.body));
-morgan.token('params', (req) => JSON.stringify(req.params));
-morgan.token('query', (req) => JSON.stringify(req.query));
-app.use(
-	morgan(
-		':method :url :status :response-time ms | body: :body | params: :params | query: :query'
-	)
-);
+// morgan.token('body', (req) => JSON.stringify(req.body));
+// morgan.token('params', (req) => JSON.stringify(req.params));
+// morgan.token('query', (req) => JSON.stringify(req.query));
+// app.use(
+// 	morgan(
+// 		':method :url :status :response-time ms | body: :body | params: :params | query: :query'
+// 	)
+// );
 
 connectDb();
+
+app.use(loggerMiddleware);
 
 app.get('/', (_request, response) => {
 	return apiResponse.success(
