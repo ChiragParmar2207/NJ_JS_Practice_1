@@ -19,7 +19,12 @@ const authenticate = async (req, res, next) => {
     let decoded;
     try {
       decoded = verifyToken(token);
-    } catch (_error) {
+    } catch (error) {
+      logger.error('Auth middleware error', {
+        error: error.message,
+        stack: error.stack,
+      });
+
       return apiResponse.unauthorized(
         res,
         responseMessages[global.lang].TOKEN_INVALID,
@@ -43,7 +48,7 @@ const authenticate = async (req, res, next) => {
 
     req.user = user;
 
-    next();
+    return next();
   } catch (error) {
     logger.error('Auth middleware error', {
       error: error.message,

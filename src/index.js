@@ -1,7 +1,8 @@
+/* eslint-disable no-process-exit */
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const morgan = require('morgan');
+// const morgan = require('morgan');
 const configs = require('./configs/configs');
 const { connectDb, checkDBConnection, disConnectDB } = require('./models/db');
 const apiResponse = require('./utils/apiResponse');
@@ -61,7 +62,8 @@ app.get('/health', (_request, response) => {
       healthStatus,
     );
   } catch (error) {
-    apiResponse.internalServerError(
+    console.log('==========> error.message', error.message);
+    return apiResponse.internalServerError(
       response,
       responseMessages[global.lang].DB_ERROR,
       { timestamp: new Date().toISOString() },

@@ -18,7 +18,7 @@ const validateRequest = (schema) => {
       }
     }
 
-    next();
+    return next();
   };
 };
 

@@ -14,7 +14,7 @@ const connectDb = async () => {
         console.log(responseMessages[global.lang].DB_ERROR, error.message);
       });
   } catch (error) {
-    console.log(responseMessages[global.lang].DB_ERROR);
+    console.log(responseMessages[global.lang].DB_ERROR, error.message);
   }
 };
 
