@@ -1,24 +1,25 @@
+const apiResponse = require('../utils/apiResponse');
+
 const validateRequest = (schema) => {
-	return (req, res, next) => {
-		const arr = ['params', 'query', 'body'];
+  return (request, response, next) => {
+    const arr = ['params', 'query', 'body'];
 
-		for (const key of arr) {
-			if (schema[key]) {
-				const { error, value } = schema[key].validate(req[key]);
-				if (error) {
-					return res.status(StatusCodes.BAD_REQUEST).json({
-						status: 'error',
-						message: error.details[0].message,
-						data: {},
-					});
-				}
+    for (const key of arr) {
+      if (schema[key]) {
+        const data = request[key] || {};
+        const { error, value } = schema[key].validate(data);
 
-				req[key] = value;
-			}
-		}
+        if (error) {
+          return apiResponse.error(response, error.details[0].message);
+        }
 
-		next();
-	};
+        // Replace request[key] with sanitized/validated value
+        request[key] = value;
+      }
+    }
+
+    next();
+  };
 };
 
 module.exports = { validateRequest };
